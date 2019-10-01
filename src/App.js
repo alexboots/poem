@@ -9,6 +9,13 @@ import { DebounceInput } from 'react-debounce-input'
 import './App.css'
 
 const initialState = {
+  search: '',
+  poemLines: [],
+  poemSelected: [],
+  numberOfPoems: 0,
+  noPoemsFound: false,
+  viewingPoemNumber: 0,
+  catchError: '',
 }
 
 function poemReducer(state, action) {
@@ -19,6 +26,7 @@ function poemReducer(state, action) {
       return {count: state.count - 1};
     default:
       return initialState
+  }
 }
 
 function App() {
@@ -27,11 +35,11 @@ function App() {
   const [poemSelected, setPoemSelected] = useState([])
   const [numberOfPoems, setNumberOfPoems] = useState(0)
   const [noPoemsFound, setNoPoemsFound] = useState(false)
-  const [catchError, setCatchError] = useState('')
+  const [viewingPoemNumber, setViewingPoemNumber] = useState(0)
   const [catchError, setCatchError] = useState('')
 
 
-  const [state, dispatch] = useReducer(poemReducer, initialState);
+  const [state, dispatch] = useReducer(poemReducer, initialState)
 
   useEffect(() => {
     const searchTerm = encodeURIComponent(search)
@@ -41,17 +49,11 @@ function App() {
           setNoPoemsFound(true)
         } else if(response && response.data.length) {
           setPoemLines(response.data[0].lines)
-
-          console.log('response.data', response.data);
           setNumberOfPoems(response.data.length)
         }
       })
       .catch(error => {
-        console.log("here", error);
         setCatchError(error.toString())
-      })
-      .finally(() => {
-        console.log('alldone');
       })
     }
   }, [search])
