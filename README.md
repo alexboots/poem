@@ -1,3 +1,7 @@
+# Poem
+
+Hits an API to find poems based on a word entered
+
 ## `npm start`
 
 Runs the app in the development mode.<br>
