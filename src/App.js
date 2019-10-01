@@ -29,15 +29,25 @@ function poemReducer(state, action) {
   }
 }
 
+const BrowsePoems = ({numberOfPoems, viewingPoemNumber, handlePrev, handleNext}) => {
+  return (
+    <div className="poem-arrows">
+      <FaArrowCircleLeft className="arrow" />
+      <div className="poem-number">{viewingPoemNumber + 1}</div>
+      <FaArrowCircleRight className="arrow" />
+    </div>
+  )
+}
+
 function App() {
   const [search, setSeach] = useState('')
   const [poemLines, setPoemLines] = useState([])
+  const [loading, setLoading] = useState('')
   const [poemSelected, setPoemSelected] = useState([])
   const [numberOfPoems, setNumberOfPoems] = useState(0)
   const [noPoemsFound, setNoPoemsFound] = useState(false)
   const [viewingPoemNumber, setViewingPoemNumber] = useState(0)
   const [catchError, setCatchError] = useState('')
-
 
   const [state, dispatch] = useReducer(poemReducer, initialState)
 
@@ -50,6 +60,7 @@ function App() {
         } else if(response && response.data.length) {
           setPoemLines(response.data[0].lines)
           setNumberOfPoems(response.data.length)
+          setNoPoemsFound(false)
         }
       })
       .catch(error => {
@@ -58,7 +69,14 @@ function App() {
     }
   }, [search])
 
-  console.log('numberOfPoems', numberOfPoems)
+  const handlePrev = () => {
+    console.log('handlePrev')
+  }
+
+  const handleNext = () => {
+    console.log('handleNext')
+  }
+
 
   return (
     <div className="app-body">
@@ -75,10 +93,12 @@ function App() {
       <span className="error">{ catchError && `Oh no: ${catchError}. Bug @alexboots about it.` }</span>
 
       { numberOfPoems > 1 &&
-        <>
-          <div className="prev-poem"> <FaArrowCircleLeft /> </div>
-          <div className="next-poem"> <FaArrowCircleRight /> </div>
-        </>
+        <BrowsePoems
+          numberOfPoems={numberOfPoems}
+          viewingPoemNumber={viewingPoemNumber}
+          handlePrev={handlePrev}
+          handleNext={handleNext}
+        />
       }
 
       <div className="poem-lines">

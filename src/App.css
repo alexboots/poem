@@ -30,6 +30,20 @@ html {
   line-height: 1.9rem;
 }
 
+.poem-arrows {
+  width: 80px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.arrow {
+  cursor: pointer;
+}
+
+.poem-number {
+  margin-top: -3px;
+}
+
 input:disabled {
   opacity: .4;
 }
