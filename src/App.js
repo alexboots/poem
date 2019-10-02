@@ -117,7 +117,7 @@ function App() {
 
   return (
     <div className="app-body">
-      <div className="tagline">Seach a word or two and we'll find you a poem</div>
+      <div className="tagline">Enter a word or two and we'll find you some poems</div>
 
       <DebounceInput
         placeholder="word(s)"
