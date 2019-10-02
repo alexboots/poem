@@ -78,13 +78,12 @@ function App() {
         } else if(response && response.data.length) {
           // Make everything  pull from this instead of so segmented
           setPoemsReceived(response.data)
-
-          setPoemLines(response.data[viewingPoemNumber].lines)
+          setPoemLines(response.data[0].lines)
           setNumberOfPoems(response.data.length)
           setNoPoemsFound(false)
           setPoemInfo({
-            author: response.data[viewingPoemNumber].author,
-            title: response.data[viewingPoemNumber].title,
+            author: response.data[0].author,
+            title: response.data[0].title,
           })
         }
       })
