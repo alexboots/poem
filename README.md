@@ -2,6 +2,8 @@
 
 Hits an API to find poems based on a word entered
 
+![Image of app](https://github.com/alexboots/poem/blob/master/readme-img.png)
+
 ## `npm start`
 
 Runs the app in the development mode.<br>
