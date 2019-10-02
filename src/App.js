@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useReducer } from 'react'
+import React, { useEffect, useState, useReducer, useRef } from 'react'
 import axios from 'axios'
 
 import FaArrowCircleLeft from 'react-icons/lib/fa/arrow-circle-left'
@@ -11,7 +11,6 @@ import './App.css'
 const initialState = {
   search: '',
   poemLines: [],
-  poemSelected: [],
   numberOfPoems: 0,
   noPoemsFound: false,
   viewingPoemNumber: 0,
@@ -29,12 +28,23 @@ function poemReducer(state, action) {
   }
 }
 
-const BrowsePoems = ({numberOfPoems, viewingPoemNumber, handlePrev, handleNext}) => {
+const BrowsePoems = ({
+  numberOfPoems,
+  viewingPoemNumber,
+  handlePrev,
+  handleNext
+}) => {
   return (
     <div className="poem-arrows">
-      <FaArrowCircleLeft className="arrow" />
-      <div className="poem-number">{viewingPoemNumber + 1}</div>
-      <FaArrowCircleRight className="arrow" />
+      <FaArrowCircleLeft
+        className={ `arrow ${viewingPoemNumber === 0 ? 'hide-arrow' : null}`}
+        onClick={handlePrev}
+      />
+      <div className="poem-number">{viewingPoemNumber + 1} of {numberOfPoems}</div>
+      <FaArrowCircleRight
+        className={ `arrow ${viewingPoemNumber === numberOfPoems - 1 ? 'hide-arrow' : null}`}
+        onClick={handleNext}
+      />
     </div>
   )
 }
@@ -42,41 +52,68 @@ const BrowsePoems = ({numberOfPoems, viewingPoemNumber, handlePrev, handleNext})
 function App() {
   const [search, setSeach] = useState('')
   const [poemLines, setPoemLines] = useState([])
-  const [loading, setLoading] = useState('')
-  const [poemSelected, setPoemSelected] = useState([])
+  const [poemInfo, setPoemInfo] = useState({author: '', title: ''})
+  const [loading, setLoading] = useState(false)
   const [numberOfPoems, setNumberOfPoems] = useState(0)
   const [noPoemsFound, setNoPoemsFound] = useState(false)
   const [viewingPoemNumber, setViewingPoemNumber] = useState(0)
   const [catchError, setCatchError] = useState('')
 
+  const [poemsReceived, setPoemsReceived] = useState([])
+
   const [state, dispatch] = useReducer(poemReducer, initialState)
 
   useEffect(() => {
+    console.log('We inside effect');
     const searchTerm = encodeURIComponent(search)
+    const source = axios.CancelToken.source()
+
     if(searchTerm) {
+      setLoading(true)
+      setViewingPoemNumber(0)
+
       axios.get(`http://poetrydb.org/lines/${searchTerm}/.json`).then(response => {
         if(response && response.data.status === 404) {
           setNoPoemsFound(true)
         } else if(response && response.data.length) {
-          setPoemLines(response.data[0].lines)
+          // Make everything  pull from this instead of so segmented
+          setPoemsReceived(response.data)
+
+          setPoemLines(response.data[viewingPoemNumber].lines)
           setNumberOfPoems(response.data.length)
           setNoPoemsFound(false)
+          setPoemInfo({
+            author: response.data[viewingPoemNumber].author,
+            title: response.data[viewingPoemNumber].title,
+          })
         }
       })
-      .catch(error => {
-        setCatchError(error.toString())
-      })
+      .catch(error => setCatchError(error.toString()))
+      .finally(() => setLoading(false))
+    }
+
+    return () => {
+      source.cancel()
     }
   }, [search])
 
   const handlePrev = () => {
-    console.log('handlePrev')
+    setViewingPoemNumber(currentNumver => currentNumver - 1)
+    setPoemLines(poemsReceived[viewingPoemNumber - 1].lines)
+    setPoemInfo({
+      author: poemsReceived[viewingPoemNumber - 1].author,
+      title: poemsReceived[viewingPoemNumber - 1].title,
+    })
   }
 
   const handleNext = () => {
-    console.log('handleNext')
+    setViewingPoemNumber(currentNumver => currentNumver + 1)
+    setPoemLines(poemsReceived[viewingPoemNumber + 1].lines)
+    setPoemInfo({
+      author: poemsReceived[viewingPoemNumber + 1].author,
+      title: poemsReceived[viewingPoemNumber + 1].title,
+    })
   }
-
 
   return (
     <div className="app-body">
@@ -87,12 +124,14 @@ function App() {
         minLength={2}
         debounceTimeout={800}
         onChange={e => setSeach(e.target.value) }
-        disabled={false}
+        disabled={loading}
       />
 
-      <span className="error">{ catchError && `Oh no: ${catchError}. Bug @alexboots about it.` }</span>
+      {loading && `Finding you poems...`}
 
-      { numberOfPoems > 1 &&
+      <span className="error">{ catchError && `Oh no: ${catchError}. Tell @alexboots this happened.` }</span>
+
+      { !loading && numberOfPoems > 1 &&
         <BrowsePoems
           numberOfPoems={numberOfPoems}
           viewingPoemNumber={viewingPoemNumber}
@@ -101,6 +140,10 @@ function App() {
         />
       }
 
+      <div>
+        <h1>{poemInfo.title}</h1>
+        <h2>{poemInfo.author}</h2>
+      </div>
       <div className="poem-lines">
         { poemLines.map((line, index) => <div key={index}>{line}</div>) }
       </div>

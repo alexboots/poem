@@ -2,8 +2,12 @@ html {
   font-size: 16px;
 }
 
-.app {
-  text-align: center;
+h1 {
+  font-size: 3rem;
+}
+
+h2 {
+  font-size: 2rem;
 }
 
 .app-body {
@@ -15,6 +19,9 @@ html {
   justify-content: center;
   font-size: calc(1.3rem);
   color: white;
+
+  padding-left: 120px;
+  padding-right: 120px;
 }
 
 .app-link {
@@ -26,12 +33,14 @@ html {
 }
 
 .poem-lines {
-  padding: 30px;
+  padding-top: 30px;
+  padding-bottom: 120px;
+  padding-left: 10%;
   line-height: 1.9rem;
 }
 
 .poem-arrows {
-  width: 80px;
+  width: 160px;
   display: flex;
   justify-content: space-between;
 }
@@ -42,6 +51,10 @@ html {
 
 .poem-number {
   margin-top: -3px;
+}
+
+.hide-arrow {
+  visibility: hidden;
 }
 
 input:disabled {
