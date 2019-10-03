@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useReducer, useRef } from 'react'
+import React, { useEffect, useReducer } from 'react'
 import axios from 'axios'
 
 import FaArrowCircleLeft from 'react-icons/lib/fa/arrow-circle-left'
@@ -18,9 +18,8 @@ const initialState = {
 }
 
 const SEARCH_CHANGED = 'SEARCH_CHANGED'
-const POEM_CHANGED = 'POEM_CHANGED'
-const POEMS_CHANGED = 'POEMS_CHANGED'
-const VIEWING_POEM_NUMBER = 'VIEWING_POEM_NUMBER'
+const SHOW_NEXT_POEM = 'SHOW_NEXT_POEM'
+const SHOW_PREVIOUS_POEM = 'SHOW_PREVIOUS_POEM'
 
 const GET_POEMS_REQUESTED = 'GET_POEMS_REQUESTED'
 const GET_POEMS_SUCCESS = 'GET_POEMS_SUCCESS'
@@ -30,9 +29,33 @@ function poemReducer(state, action) {
   switch (action.type) {
     case SEARCH_CHANGED:
       return { ...state, search: action.payload }
-    case POEM_CHANGED:
-      return { ...state, viewingPoem: 2, poem: 'error' }
-    case POEMS_CHANGED:
+    case SHOW_PREVIOUS_POEM:
+      let prevPoemIndex = state.viewingPoem - 1
+      if(prevPoemIndex < 0) { prevPoemIndex = 0 }
+      return {
+        ...state,
+        viewingPoem: prevPoemIndex,
+        poem: {
+          title: state.poems[prevPoemIndex].title,
+          author: state.poems[prevPoemIndex].author,
+          lines: state.poems[prevPoemIndex].lines,
+        },
+      }
+    case SHOW_NEXT_POEM:
+      let nextPoemIndex = state.viewingPoem + 1
+      if(nextPoemIndex > state.poems.length - 1) { nextPoemIndex = state.poems.length - 1 }
+      return {
+        ...state,
+        viewingPoem: nextPoemIndex,
+        poem: {
+          title: state.poems[nextPoemIndex].title,
+          author: state.poems[nextPoemIndex].author,
+          lines: state.poems[nextPoemIndex].lines,
+        },
+      }
+    case GET_POEMS_REQUESTED:
+      return { ...state, isFetching: true, error: '' }
+    case GET_POEMS_SUCCESS:
       return {
         ...state,
         poems: action.payload,
@@ -44,9 +67,6 @@ function poemReducer(state, action) {
         },
         isFetching: false,
       }
-
-    case GET_POEMS_REQUESTED:
-      return { ...state, isFetching: true, error: '' }
     case GET_POEMS_FAILED:
       return { ...state, error: action.payload, isFetching: false }
     default:
@@ -57,19 +77,18 @@ function poemReducer(state, action) {
 const BrowsePoems = ({
   numberOfPoems,
   viewingPoem,
-  handlePrev,
-  handleNext
+  dispatch
 }) => {
   return (
     <div className="poem-arrows">
       <FaArrowCircleLeft
         className={ `arrow ${viewingPoem === 0 ? 'hide-arrow' : null}`}
-        onClick={handlePrev}
+        onClick={() => dispatch({ type: SHOW_PREVIOUS_POEM })}
       />
       <div className="poem-number">{viewingPoem + 1} of {numberOfPoems}</div>
       <FaArrowCircleRight
         className={ `arrow ${viewingPoem === numberOfPoems - 1 ? 'hide-arrow' : null}`}
-        onClick={handleNext}
+        onClick={() => dispatch({ type: SHOW_NEXT_POEM })}
       />
     </div>
   )
@@ -88,15 +107,11 @@ function App() {
         if(response && response.data.status === 404) {
           dispatch({ type: GET_POEMS_FAILED, payload: 'No poems for this search term' })
         } else if(response && response.data.length) {
-          console.log('hi');
-          dispatch({ type: POEMS_CHANGED, payload: response.data })
+          dispatch({ type: GET_POEMS_SUCCESS, payload: response.data })
         }
       })
       .catch(error => {
         dispatch({ type: GET_POEMS_FAILED, payload: error.toString() })
-      })
-      .finally(() => {
-        // setLoading(false)
       })
     }
 
@@ -104,24 +119,6 @@ function App() {
       source.cancel()
     }
   }, [state.search])
-
-  const handlePrev = () => {
-    // setviewingPoem(currentNumver => currentNumver - 1)
-    // setPoemLines(poemsReceived[viewingPoem - 1].lines)
-    // setPoemInfo({
-    //   author: poemsReceived[viewingPoem - 1].author,
-    //   title: poemsReceived[viewingPoem - 1].title,
-    // })
-  }
-
-  const handleNext = () => {
-    // setviewingPoem(currentNumver => currentNumver + 1)
-    // setPoemLines(poemsReceived[viewingPoem + 1].lines)
-    // setPoemInfo({
-    //   author: poemsReceived[viewingPoem + 1].author,
-    //   title: poemsReceived[viewingPoem + 1].title,
-    // })
-  }
 
   return (
     <div className="app-body">
@@ -145,8 +142,7 @@ function App() {
         <BrowsePoems
           numberOfPoems={state.poems.length}
           viewingPoem={state.viewingPoem}
-          handlePrev={handlePrev}
-          handleNext={handleNext}
+          dispatch={dispatch}
         />
       }
 
