@@ -127,7 +127,7 @@ function App() {
     const searchTerm: string = encodeURIComponent(state.search)
     const source = axios.CancelToken.source()
 
-    if(searchTerm) {
+    if(searchTerm && !state.isFetching) {
       dispatch({ type: GET_POEMS_REQUESTED })
       axios.get(`http://poetrydb.org/lines/${searchTerm}/.json`).then(response => {
         if(response && response.data.status === 404) {
