@@ -94,7 +94,7 @@ function poemReducer(state = initialState, action: Iaction): Istate {
         isFetching: false,
       }
     case GET_POEMS_FAILED:
-      return { ...state, error: action.payload, isFetching: false }
+      return { ...initialState, error: action.payload }
     default:
       return initialState
   }
