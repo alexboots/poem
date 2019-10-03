@@ -1,8 +1,8 @@
 import React, { useEffect, useReducer } from 'react'
 import axios from 'axios'
 
-import {FaArrowCircleLeft} from 'react-icons/fa'
-import {FaArrowCircleRight} from 'react-icons/fa'
+// import {FaArrowCircleLeft} from 'react-icons/fa'
+// import {FaArrowCircleRight} from 'react-icons/fa'
 
 import { DebounceInput } from 'react-debounce-input'
 
@@ -26,7 +26,28 @@ const GET_POEMS_REQUESTED = 'GET_POEMS_REQUESTED'
 const GET_POEMS_SUCCESS = 'GET_POEMS_SUCCESS'
 const GET_POEMS_FAILED = 'GET_POEMS_FAILED'
 
-function poemReducer(state, action) {
+
+interface Ipoems {
+  title: string,
+  lines: Array<string>,
+  author: string,
+}
+
+interface Istate {
+  search: string,
+  poem: object,
+  poems: Ipoems,
+  viewingPoem: number,
+  isFetching: boolean,
+  error: string,
+}
+
+interface Iaction {
+  type: string,
+  payload: object
+}
+
+function poemReducer(state: Istate, action: Iaction) {
   switch (action.type) {
     case SEARCH_CHANGED:
       return { ...state, search: action.payload }
@@ -82,15 +103,15 @@ const BrowsePoems = ({
 }) => {
   return (
     <div className="poem-arrows">
-      <FaArrowCircleLeft
-        className={ `arrow ${viewingPoem === 0 ? 'hide-arrow' : null}`}
-        onClick={() => dispatch({ type: SHOW_PREVIOUS_POEM })}
-      />
-      <div className="poem-number">{viewingPoem + 1} of {numberOfPoems}</div>
-      <FaArrowCircleRight
-        className={ `arrow ${viewingPoem === numberOfPoems - 1 ? 'hide-arrow' : null}`}
-        onClick={() => dispatch({ type: SHOW_NEXT_POEM })}
-      />
+      {/* <FaArrowCircleLeft */}
+      {/*   className={ `arrow ${viewingPoem === 0 ? 'hide-arrow' : null}`} */}
+      {/*   onClick={() => dispatch({ type: SHOW_PREVIOUS_POEM })} */}
+      {/* /> */}
+      {/* <div className="poem-number">{viewingPoem + 1} of {numberOfPoems}</div> */}
+      {/* <FaArrowCircleRight */}
+      {/*   className={ `arrow ${viewingPoem === numberOfPoems - 1 ? 'hide-arrow' : null}`} */}
+      {/*   onClick={() => dispatch({ type: SHOW_NEXT_POEM })} */}
+      {/* /> */}
     </div>
   )
 }
