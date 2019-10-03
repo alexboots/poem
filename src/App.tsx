@@ -1,8 +1,8 @@
 import React, { useEffect, useReducer } from 'react'
 import axios from 'axios'
 
-import FaArrowCircleLeft from 'react-icons/lib/fa/arrow-circle-left'
-import FaArrowCircleRight from 'react-icons/lib/fa/arrow-circle-right'
+import {FaArrowCircleLeft} from 'react-icons/fa'
+import {FaArrowCircleRight} from 'react-icons/fa'
 
 import { DebounceInput } from 'react-debounce-input'
 
@@ -16,6 +16,7 @@ const initialState = {
   isFetching: false,
   error: '',
 }
+
 
 const SEARCH_CHANGED = 'SEARCH_CHANGED'
 const SHOW_NEXT_POEM = 'SHOW_NEXT_POEM'
