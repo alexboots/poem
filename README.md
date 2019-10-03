@@ -4,7 +4,7 @@ Hits an API to find poems based on a word entered.
 
 I mainly made this to play w useReducer + Typescript. 
 
-See live: [alexhays.com/poem](alexhays.com/poem)
+See live: [http://alexhays.com/poem](http://alexhays.com/poem)
 
 Powered by [http://poetrydb.org](http://poetrydb.org)
 
