@@ -59,8 +59,8 @@ h2 {
 
 @media screen and (max-width: 1400px) {
   .app-body {
-    padding-left: 0;
-    padding-right: 0;
+    padding-left: 12px;
+    padding-right: 12px;
   }
 
   .tagline {
