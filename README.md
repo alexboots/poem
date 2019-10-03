@@ -1,6 +1,6 @@
 # Poem
 
-Hits an API to find poems based on a word entered
+Hits an API to find poems based on a word entered. I mainly made this to play w useReducer + Typescript.
 
 ![Image of app](https://github.com/alexboots/poem/blob/master/readme-img.png)
 
