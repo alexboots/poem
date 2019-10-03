@@ -1,6 +1,12 @@
 # Poem
 
-Hits an API to find poems based on a word entered. I mainly made this to play w useReducer + Typescript. Powered by [http://poetrydb.org](http://poetrydb.org)
+Hits an API to find poems based on a word entered. 
+
+I mainly made this to play w useReducer + Typescript. 
+
+See live: [http://alexhays.com/poem](http://alexhays.com/poem)
+
+Powered by [http://poetrydb.org](http://poetrydb.org)
 
 ![Image of app](https://github.com/alexboots/poem/blob/master/readme-img.png)
 
