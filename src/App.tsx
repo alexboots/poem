@@ -1,8 +1,7 @@
 import React, { useEffect, useReducer } from 'react'
 import axios from 'axios'
 
-// import {FaArrowCircleLeft} from 'react-icons/fa'
-// import {FaArrowCircleRight} from 'react-icons/fa'
+import { FaArrowCircleLeft, FaArrowCircleRight } from 'react-icons/fa'
 
 import { DebounceInput } from 'react-debounce-input'
 
@@ -108,15 +107,15 @@ const BrowsePoems = ({
 }: IbrowsePoemsProps) => {
   return (
     <div className="poem-arrows">
-      {/* <FaArrowCircleLeft */}
-      {/*   className={ `arrow ${viewingPoem === 0 ? 'hide-arrow' : null}`} */}
-      {/*   onClick={() => dispatch({ type: SHOW_PREVIOUS_POEM })} */}
-      {/* /> */}
-      {/* <div className="poem-number">{viewingPoem + 1} of {numberOfPoems}</div> */}
-      {/* <FaArrowCircleRight */}
-      {/*   className={ `arrow ${viewingPoem === numberOfPoems - 1 ? 'hide-arrow' : null}`} */}
-      {/*   onClick={() => dispatch({ type: SHOW_NEXT_POEM })} */}
-      {/* /> */}
+      <FaArrowCircleLeft
+        className={ `arrow ${viewingPoem === 0 ? 'hide-arrow' : null}`}
+        onClick={() => dispatch({ type: SHOW_PREVIOUS_POEM })}
+      />
+      <div className="poem-number">{viewingPoem + 1} of {numberOfPoems}</div>
+      <FaArrowCircleRight
+        className={ `arrow ${viewingPoem === numberOfPoems - 1 ? 'hide-arrow' : null}`}
+        onClick={() => dispatch({ type: SHOW_NEXT_POEM })}
+      />
     </div>
   )
 }
