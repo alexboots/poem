@@ -8,7 +8,28 @@ import { DebounceInput } from 'react-debounce-input'
 
 import './App.css'
 
-const initialState = {
+interface Ipoem {
+  title: string,
+  lines: Array<string>,
+  author: string,
+  [index: number]: string | Array<string> | undefined
+}
+
+interface Istate {
+  search: string,
+  poem: Ipoem,
+  poems: Array<Ipoem>,
+  viewingPoem: number,
+  isFetching: boolean,
+  error: string,
+}
+
+interface Iaction {
+  type: string,
+  payload?: any
+}
+
+const initialState: Istate = {
   search: '',
   poem: {title: '', lines: [], author: ''},
   poems: [],
@@ -16,7 +37,6 @@ const initialState = {
   isFetching: false,
   error: '',
 }
-
 
 const SEARCH_CHANGED = 'SEARCH_CHANGED'
 const SHOW_NEXT_POEM = 'SHOW_NEXT_POEM'
@@ -26,28 +46,12 @@ const GET_POEMS_REQUESTED = 'GET_POEMS_REQUESTED'
 const GET_POEMS_SUCCESS = 'GET_POEMS_SUCCESS'
 const GET_POEMS_FAILED = 'GET_POEMS_FAILED'
 
+// type Action =
+//   | { type: 'increment' }
+//   | { type: 'decrement' }
+//   | { type: 'incrementAmount'; amount: number };
 
-interface Ipoems {
-  title: string,
-  lines: Array<string>,
-  author: string,
-}
-
-interface Istate {
-  search: string,
-  poem: object,
-  poems: Ipoems,
-  viewingPoem: number,
-  isFetching: boolean,
-  error: string,
-}
-
-interface Iaction {
-  type: string,
-  payload: object
-}
-
-function poemReducer(state: Istate, action: Iaction) {
+function poemReducer(state = initialState, action: Iaction) {
   switch (action.type) {
     case SEARCH_CHANGED:
       return { ...state, search: action.payload }
@@ -95,32 +99,32 @@ function poemReducer(state: Istate, action: Iaction) {
       return initialState
   }
 }
-
-const BrowsePoems = ({
-  numberOfPoems,
-  viewingPoem,
-  dispatch
-}) => {
-  return (
-    <div className="poem-arrows">
-      {/* <FaArrowCircleLeft */}
-      {/*   className={ `arrow ${viewingPoem === 0 ? 'hide-arrow' : null}`} */}
-      {/*   onClick={() => dispatch({ type: SHOW_PREVIOUS_POEM })} */}
-      {/* /> */}
-      {/* <div className="poem-number">{viewingPoem + 1} of {numberOfPoems}</div> */}
-      {/* <FaArrowCircleRight */}
-      {/*   className={ `arrow ${viewingPoem === numberOfPoems - 1 ? 'hide-arrow' : null}`} */}
-      {/*   onClick={() => dispatch({ type: SHOW_NEXT_POEM })} */}
-      {/* /> */}
-    </div>
-  )
-}
+// 
+// const BrowsePoems = ({
+//   numberOfPoems,
+//   viewingPoem,
+//   dispatch
+// }) => {
+//   return (
+//     <div className="poem-arrows">
+//       {/* <FaArrowCircleLeft */}
+//       {/*   className={ `arrow ${viewingPoem === 0 ? 'hide-arrow' : null}`} */}
+//       {/*   onClick={() => dispatch({ type: SHOW_PREVIOUS_POEM })} */}
+//       {/* /> */}
+//       {/* <div className="poem-number">{viewingPoem + 1} of {numberOfPoems}</div> */}
+//       {/* <FaArrowCircleRight */}
+//       {/*   className={ `arrow ${viewingPoem === numberOfPoems - 1 ? 'hide-arrow' : null}`} */}
+//       {/*   onClick={() => dispatch({ type: SHOW_NEXT_POEM })} */}
+//       {/* /> */}
+//     </div>
+//   )
+// }
 
 function App() {
   const [state, dispatch] = useReducer(poemReducer, initialState)
 
   useEffect(() => {
-    const searchTerm = encodeURIComponent(state.search)
+    const searchTerm: string = encodeURIComponent(state.search)
     const source = axios.CancelToken.source()
 
     if(searchTerm) {
@@ -159,21 +163,21 @@ function App() {
       {state.isFetching && `Finding you poems...`}
 
       <span className="error">{state.error && `Oh no: ${state.error}.`}</span>
-
-      { !state.isFetching && state.poems.length > 1 &&
-        <BrowsePoems
-          numberOfPoems={state.poems.length}
-          viewingPoem={state.viewingPoem}
-          dispatch={dispatch}
-        />
-      }
-
+{/*  */}
+{/*       { !state.isFetching && state.poems.length > 1 && */}
+{/*         <BrowsePoems */}
+{/*           numberOfPoems={state.poems.length} */}
+{/*           viewingPoem={state.viewingPoem} */}
+{/*           dispatch={dispatch} */}
+{/*         /> */}
+{/*       } */}
+{/*  */}
       <div>
         <h1>{state.poem.title}</h1>
         <h2>{state.poem.author}</h2>
       </div>
       <div className="poem-lines">
-        { state.poem.lines.map((line, index) => <div key={index}>{line}</div>) }
+        { state.poem.lines.map((line: string, index: number) => <div key={index}>{line}</div>) }
       </div>
       { state.poems.length === 0 && !state.isFetching && state.search && <div>No Poems Found :(</div>}
 
