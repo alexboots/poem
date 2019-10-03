@@ -59,7 +59,8 @@ h2 {
 
 @media screen and (max-width: 1400px) {
   .app-body {
-    background-color: lightblue;
+    padding-left: 0;
+    padding-right: 0;
   }
 
   .tagline {
