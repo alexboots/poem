@@ -12,7 +12,7 @@ interface Ipoem {
   title: string,
   lines: Array<string>,
   author: string,
-  [index: number]: string | Array<string> | undefined
+  [index: number]: string
 }
 
 interface Istate {
@@ -27,6 +27,12 @@ interface Istate {
 interface Iaction {
   type: string,
   payload?: any
+}
+
+interface IbrowsePoemsProps {
+  numberOfPoems: number,
+  viewingPoem: number,
+  dispatch: Function,
 }
 
 const initialState: Istate = {
@@ -45,11 +51,6 @@ const SHOW_PREVIOUS_POEM = 'SHOW_PREVIOUS_POEM'
 const GET_POEMS_REQUESTED = 'GET_POEMS_REQUESTED'
 const GET_POEMS_SUCCESS = 'GET_POEMS_SUCCESS'
 const GET_POEMS_FAILED = 'GET_POEMS_FAILED'
-
-// type Action =
-//   | { type: 'increment' }
-//   | { type: 'decrement' }
-//   | { type: 'incrementAmount'; amount: number };
 
 function poemReducer(state = initialState, action: Iaction) {
   switch (action.type) {
@@ -99,26 +100,26 @@ function poemReducer(state = initialState, action: Iaction) {
       return initialState
   }
 }
-// 
-// const BrowsePoems = ({
-//   numberOfPoems,
-//   viewingPoem,
-//   dispatch
-// }) => {
-//   return (
-//     <div className="poem-arrows">
-//       {/* <FaArrowCircleLeft */}
-//       {/*   className={ `arrow ${viewingPoem === 0 ? 'hide-arrow' : null}`} */}
-//       {/*   onClick={() => dispatch({ type: SHOW_PREVIOUS_POEM })} */}
-//       {/* /> */}
-//       {/* <div className="poem-number">{viewingPoem + 1} of {numberOfPoems}</div> */}
-//       {/* <FaArrowCircleRight */}
-//       {/*   className={ `arrow ${viewingPoem === numberOfPoems - 1 ? 'hide-arrow' : null}`} */}
-//       {/*   onClick={() => dispatch({ type: SHOW_NEXT_POEM })} */}
-//       {/* /> */}
-//     </div>
-//   )
-// }
+
+const BrowsePoems = ({
+  numberOfPoems,
+  viewingPoem,
+  dispatch
+}: IbrowsePoemsProps) => {
+  return (
+    <div className="poem-arrows">
+      {/* <FaArrowCircleLeft */}
+      {/*   className={ `arrow ${viewingPoem === 0 ? 'hide-arrow' : null}`} */}
+      {/*   onClick={() => dispatch({ type: SHOW_PREVIOUS_POEM })} */}
+      {/* /> */}
+      {/* <div className="poem-number">{viewingPoem + 1} of {numberOfPoems}</div> */}
+      {/* <FaArrowCircleRight */}
+      {/*   className={ `arrow ${viewingPoem === numberOfPoems - 1 ? 'hide-arrow' : null}`} */}
+      {/*   onClick={() => dispatch({ type: SHOW_NEXT_POEM })} */}
+      {/* /> */}
+    </div>
+  )
+}
 
 function App() {
   const [state, dispatch] = useReducer(poemReducer, initialState)
@@ -163,15 +164,15 @@ function App() {
       {state.isFetching && `Finding you poems...`}
 
       <span className="error">{state.error && `Oh no: ${state.error}.`}</span>
-{/*  */}
-{/*       { !state.isFetching && state.poems.length > 1 && */}
-{/*         <BrowsePoems */}
-{/*           numberOfPoems={state.poems.length} */}
-{/*           viewingPoem={state.viewingPoem} */}
-{/*           dispatch={dispatch} */}
-{/*         /> */}
-{/*       } */}
-{/*  */}
+
+      { !state.isFetching && state.poems.length > 1 &&
+        <BrowsePoems
+          numberOfPoems={state.poems.length}
+          viewingPoem={state.viewingPoem}
+          dispatch={dispatch}
+        />
+      }
+
       <div>
         <h1>{state.poem.title}</h1>
         <h2>{state.poem.author}</h2>
