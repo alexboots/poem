@@ -51,7 +51,7 @@ const GET_POEMS_REQUESTED = 'GET_POEMS_REQUESTED'
 const GET_POEMS_SUCCESS = 'GET_POEMS_SUCCESS'
 const GET_POEMS_FAILED = 'GET_POEMS_FAILED'
 
-function poemReducer(state = initialState, action: Iaction) {
+function poemReducer(state = initialState, action: Iaction): Istate {
   switch (action.type) {
     case SEARCH_CHANGED:
       return { ...state, search: action.payload }
@@ -100,11 +100,11 @@ function poemReducer(state = initialState, action: Iaction) {
   }
 }
 
-const BrowsePoems = ({
+const BrowsePoems: React.FunctionComponent<IbrowsePoemsProps> = ({
   numberOfPoems,
   viewingPoem,
   dispatch
-}: IbrowsePoemsProps) => {
+}): React.ReactElement => {
   return (
     <div className="poem-arrows">
       <FaArrowCircleLeft
